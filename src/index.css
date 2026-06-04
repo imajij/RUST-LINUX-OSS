@@ -1,0 +1,74 @@
+/* index.css — Adrak design system. Cozy cream + acid-lime, light-default,
+   themed entirely with CSS variables. Ported from the Claude Design handoff. */
+
+:root {
+  --bg:#FBF7EC; --surface:#FFFFFF; --surface-2:#F4EEDF; --surface-blur:rgba(255,253,247,0.82);
+  --line:#ECE4D2; --text:#2A2520; --muted:#8A8170; --faint:#B3AB99;
+  --hero-panel:#FBF6E8; --heat-empty:#ECE5D4; --shadow:rgba(94,129,10,0.45);
+  --cat:#F7853A;
+  --track-rust:#F7853A; --track-c:#1F9FC4; --track-rfl:#8B5CF6;
+  --success:#1F9D57; --warn:#C98A00; --danger:#E04A38; --info:#1F8FB5;
+  --accent:#86CB12; --accent-deep:#4E810A; --accent-soft:#EAF7CE; --on-accent:#1f3300;
+  --font-display:'Fredoka', sans-serif; --font-body:'Nunito', sans-serif; --font-mono:'JetBrains Mono', monospace;
+  color-scheme: light;
+}
+[data-theme="dark"] {
+  --bg:#14110B; --surface:#1C1810; --surface-2:#262017; --surface-blur:rgba(20,17,11,0.82);
+  --line:#342D20; --text:#F2ECDD; --muted:#A99D85; --faint:#6E654F;
+  --hero-panel:#1F1A11; --heat-empty:#2A2418; --shadow:rgba(0,0,0,0.6);
+  --cat:#FF9A4D;
+  --track-rust:#FF9A4D; --track-c:#38BDF8; --track-rfl:#A78BFA;
+  --success:#34D399; --warn:#FBBF24; --danger:#F87171; --info:#38BDF8;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 14px;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  transition: background .3s, color .3s;
+}
+.tabular { font-variant-numeric: tabular-nums; }
+h1, h2, h3, h4 { font-family: var(--font-display); }
+button { font-family: var(--font-body); }
+a { color: inherit; }
+::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+
+/* row hover-reveal actions */
+.row-actions { opacity: 0; transition: opacity .15s; }
+.row-hover:hover .row-actions { opacity: 1; }
+@media (hover: none) { .row-actions { opacity: 1; } }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 999px; border: 2px solid var(--bg); }
+::-webkit-scrollbar-track { background: transparent; }
+
+input, textarea, select { font-family: var(--font-body); }
+input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; }
+
+/* animations */
+@keyframes fade-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes page-in { from { opacity: .35; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes slide-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes pop { 0% { transform: scale(0.6); } 70% { transform: scale(1.12); } 100% { transform: scale(1); } }
+@keyframes hm-pop { 0% { transform: scale(0); } 70% { transform: scale(1.15); } 100% { transform: scale(1); } }
+@keyframes flame-flick { 0%,100% { transform: rotate(-4deg) scale(1); } 50% { transform: rotate(4deg) scale(1.08); } }
+@keyframes float-y { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes blink { 0%,93%,100% { transform: scaleY(1); } 96% { transform: scaleY(0.08); } }
+@keyframes tail-wag { 0%,100% { transform: rotate(-6deg); } 50% { transform: rotate(8deg); } }
+@keyframes glow-pulse { 0%,100% { filter: drop-shadow(0 0 2px var(--accent)); } 50% { filter: drop-shadow(0 0 8px var(--accent)); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
+
+kbd { font-family: var(--font-mono); }
+.navbtn {
+  display: flex; align-items: center; gap: 11px; padding: 9px 12px; border-radius: 12px; border: none; cursor: pointer; text-align: left;
+  font-family: var(--font-body); font-weight: 600; font-size: 14px; background: transparent; color: var(--muted); width: 100%; white-space: nowrap;
+  transition: background .15s, color .15s;
+}
+.navbtn:hover { background: var(--surface-2); }
+.navbtn[aria-current="true"] { background: var(--accent-soft); color: var(--accent-deep); }
