@@ -3,7 +3,7 @@ import type { MouseEvent } from 'react'
 import type { Contrib, Goal, QuestKind, ReadingItem, ThemeName } from './types'
 import { questComplete, useStore } from './lib/store'
 import { applyTheme } from './lib/theme'
-import { PHASES, PRACTICE_MINUTES, leagueFor, levelInfo, problemXP, streak, weeklyXP } from './lib/calc'
+import { NOTE_MINUTES, PHASES, PRACTICE_MINUTES, leagueFor, levelInfo, problemXP, streak, weeklyXP } from './lib/calc'
 import type { LevelInfo, League } from './lib/calc'
 import { todayISO } from './lib/date'
 import { fireConfetti } from './lib/confetti'
@@ -18,16 +18,15 @@ import { Roadmap } from './pages/Roadmap'
 import { Study } from './pages/Study'
 import { Contributions } from './pages/Contributions'
 import { Reading } from './pages/Reading'
-import { Coding, Thinking } from './pages/Practice'
-import type { SolveFn } from './pages/Practice'
+import { Learn } from './pages/Learn'
+import type { ReadNoteFn, SolveFn } from './pages/Learn'
 import { Goals } from './pages/Goals'
 import { Settings } from './pages/Settings'
 
 const NAV = [
   { id: 'overview', label: 'Overview', short: 'Home', icon: 'overview' },
   { id: 'roadmap', label: 'Roadmap', short: 'Map', icon: 'roadmap' },
-  { id: 'coding', label: 'Coding', short: 'Code', icon: 'code' },
-  { id: 'thinking', label: 'Thinking', short: 'Think', icon: 'bulb' },
+  { id: 'learn', label: 'Learn', short: 'Learn', icon: 'grad' },
   { id: 'study', label: 'Study Log', short: 'Study', icon: 'study' },
   { id: 'contribs', label: 'Contributions', short: 'PRs', icon: 'contribs' },
   { id: 'reading', label: 'Reading', short: 'Read', icon: 'reading' },
@@ -126,6 +125,21 @@ export function App() {
     if (became && e && e.clientX) fireConfetti({ x: e.clientX, y: e.clientY, count: 45 })
   }
 
+  const markNoteRead: ReadNoteFn = (id, e) => {
+    let became = false
+    update((s) => {
+      if (s.notesRead[id]) { delete s.notesRead[id] }
+      else {
+        s.notesRead[id] = todayISO()
+        s.activity[todayISO()] = (s.activity[todayISO()] || 0) + NOTE_MINUTES
+        questComplete(s, 'read'); bonusIfAllDone(s)
+        became = true
+      }
+      return s
+    })
+    if (became && e && e.clientX) fireConfetti({ x: e.clientX, y: e.clientY, count: 45 })
+  }
+
   const saveLog = ({ track, desc, hours }: LogInput) => {
     update((s) => {
       s.study.unshift({ id: 'st' + Date.now(), date: todayISO(), track, desc, hours })
@@ -168,8 +182,7 @@ export function App() {
     switch (page) {
       case 'overview': return <Overview state={state} update={update} nav={nav} openQuickAdd={() => setLogOpen(true)} completeLeaf={completeLeaf} />
       case 'roadmap': return <Roadmap state={state} update={update} toggleLeaf={toggleLeaf} />
-      case 'coding': return <Coding state={state} update={update} onSolve={setProblemSolved} />
-      case 'thinking': return <Thinking state={state} update={update} onSolve={setProblemSolved} />
+      case 'learn': return <Learn state={state} update={update} onSolve={setProblemSolved} onReadNote={markNoteRead} />
       case 'study': return <Study state={state} update={update} openQuickAdd={() => setLogOpen(true)} />
       case 'contribs': return <Contributions state={state} update={update} openContribModal={(c) => setContribItem(c)} />
       case 'reading': return <Reading state={state} update={update} openReadingModal={(r) => setReadingItem(r)} award={award} />

@@ -120,6 +120,7 @@ export function defaultState(): AppState {
     goals: seedGoals(),
     quests: { date: todayISO(), items: defaultQuests(), claimed: [] },
     practice: {},
+    notesRead: {},
     xpBonus: 0,
     seenLevel: null,
   }

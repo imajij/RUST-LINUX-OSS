@@ -33,13 +33,20 @@ npm run typecheck  # type-check only
   countdowns, and one-tap "pick up where you left off".
 - **Roadmap** — tracks → collapsible groups → checkable items (Rust, C/Linux,
   Rust for Linux). Ticking one fires confetti and feeds your quests.
-- **Coding** — ~1,400 hands-on Rust exercises (≈70 per chapter of *The Rust
-  Programming Language*). Per-chapter accordion with difficulty/status filters,
-  progressive hints, a revealable reference solution, and a one-click **Open in
-  Rust Playground** button. Mark solved to earn XP and feed your streak.
-- **Thinking** — ~600 conceptual problems (≈30 per chapter): predict-the-output,
-  explain-the-error, borrow-checker reasoning, and design trade-offs, each with a
-  model answer. Bookmark and add notes to any problem.
+- **Learn** — the one-stop study hub. Pick a **Track** (Rust / Linux) and a
+  **Mode** (Notes / Coding / Thinking), then a per-chapter accordion:
+  - **Notes** — comprehensive study notes for all 36 chapters/topics (20 Rust +
+    16 Linux): summary, theory sections with code, key takeaways, and a
+    cheat-sheet. *Mark as read* to earn XP.
+  - **Coding** — ~2,240 hands-on exercises (≈70 per chapter). Rust problems get a
+    one-click **Open in Rust Playground**; Linux/kernel problems get **Copy
+    starter** (kernel C can't run in a browser). Difficulty/status filters,
+    progressive hints, a revealable reference solution.
+  - **Thinking** — ~960 conceptual problems (≈30 per chapter): predict-the-output,
+    explain-the-error, borrow-checker/locking reasoning, and design trade-offs.
+  - 20 Rust chapters (*The Rust Programming Language*) + a 16-topic Linux kernel
+    curriculum, from C-for-the-kernel through drivers, locking, and Rust-for-Linux.
+    Bookmark and add notes to any problem; solving earns XP and feeds your streak.
 - **Study Log** — fast logging (press <kbd>N</kbd> anywhere), hours-by-track
   chart, streak + longest streak.
 - **Contributions** — PR/issue log with filters, monthly chart, starred main
@@ -50,8 +57,8 @@ npm run typecheck  # type-check only
 
 ### Gamification model
 
-- **XP**: study `20/hr` · reading `25/chapter` · roadmap item `40` ·
-  practice problem `coding 15–60 / thinking 12–55` by difficulty ·
+- **XP**: study `20/hr` · reading `25/chapter` · note read `25` · roadmap item
+  `40` · practice problem `coding 15–60 / thinking 12–55` by difficulty ·
   contribution `merged 150 / issue 70 / submitted 60 / changes 40` · all-quests
   bonus `120`.
 - **Level**: reach level *L* at `60·(L−1)²` XP.
@@ -92,12 +99,15 @@ src/
     date.ts, github.ts, theme.ts, confetti.ts
   components/
     Adrak.tsx           the cat mascot (animated SVG)
+    Markdown.tsx        tiny dependency-free renderer for note prose
     Icon.tsx, ui.tsx, charts.tsx, Heatmap.tsx, modals.tsx, shared.tsx
   data/
-    chapters.ts         the 20 Rust-book chapters + per-chapter problem counts
-    problemsLoader.ts   lazy per-chapter loader (Vite import.meta.glob)
-    problems/           chNN-c1/c2/t.ts — ~2,000 bundled practice problems
-  pages/                Overview, Roadmap, Coding, Thinking, Study, Contributions, Reading, Goals, Settings
+    chapters.ts         20 Rust chapters + 16 Linux topics (+ problem counts)
+    problemsLoader.ts   lazy per-chapter problem loader (Vite import.meta.glob)
+    notesLoader.ts      lazy per-chapter notes loader
+    problems/           chNN-* (Rust) & lxNN-* (Linux) — 3,600 bundled problems
+    notes/              rs-chNN / lx-chNN — 36 comprehensive study notes
+  pages/                Overview, Roadmap, Learn, Study, Contributions, Reading, Goals, Settings
 ```
 
 > The problem bank is **bundled content, lazy-loaded per chapter** — only your

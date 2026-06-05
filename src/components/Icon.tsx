@@ -36,6 +36,7 @@ const ICON_PATHS: Record<string, string> = {
   bookmark: 'M6 3h12a1 1 0 011 1v17l-7-4.5L5 21V4a1 1 0 011-1z',
   filter: 'M3 4h18l-7 8v7l-4 2v-9z',
   eye: 'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7zM12 15a3 3 0 100-6 3 3 0 000 6z',
+  grad: 'M12 4L2 9l10 5 10-5zM6 11.5V16c0 1.1 2.7 2.5 6 2.5s6-1.4 6-2.5v-4.5M21 9.5v5',
 }
 
 interface IconProps extends Omit<SVGProps<SVGSVGElement>, 'name' | 'fill' | 'stroke'> {

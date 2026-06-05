@@ -37,6 +37,28 @@ export interface ProblemProgress {
   notes?: string
 }
 
+/* ---------- learning tracks & chapter notes ---------- */
+// The two learning tracks in the Learn hub. Problem/note ids encode the track:
+//   rust  -> 'rs-ch04-c-012' / note 'note-rs-04'
+//   linux -> 'lx-ch08-c-012' / note 'note-lx-08'
+export type LearnTrack = 'rust' | 'linux'
+
+export interface NoteCode { lang: string; src: string }            // a code snippet shown after prose
+export interface NoteSection { heading: string; body: string; code?: NoteCode[] }
+export interface CheatRow { label: string; value: string }
+
+// Static, bundled study notes (comprehensive theory), lazy-loaded per chapter.
+export interface ChapterNote {
+  id: string            // 'note-rs-04' / 'note-lx-08'
+  track: LearnTrack
+  chapter: number
+  title: string
+  summary: string
+  sections: NoteSection[]
+  takeaways: string[]
+  cheatsheet?: CheatRow[]
+}
+
 export interface LeafItem {
   id: string
   type: 'leaf'
@@ -149,6 +171,7 @@ export interface AppState {
   goals: Goal[]
   quests: Quests
   practice: Record<string, ProblemProgress>
+  notesRead: Record<string, string>   // noteId -> ISO date marked read
   xpBonus: number
   seenLevel: number | null
 }
