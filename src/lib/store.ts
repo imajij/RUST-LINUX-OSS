@@ -98,6 +98,7 @@ function seedContribs(): AppState['contribs'] {
 export function defaultQuests(): Quest[] {
   return [
     { id: 'q-study', icon: '⏱️', label: 'Log 30 min of study', xp: 30, kind: 'study', done: false },
+    { id: 'q-practice', icon: '🧩', label: 'Solve a practice problem', xp: 35, kind: 'practice', done: false },
     { id: 'q-read', icon: '📖', label: 'Read a chapter', xp: 40, kind: 'read', done: false },
     { id: 'q-roadmap', icon: '✅', label: 'Tick off a roadmap item', xp: 50, kind: 'roadmap', done: false },
   ]
@@ -118,6 +119,7 @@ export function defaultState(): AppState {
     reading: seedReading(),
     goals: seedGoals(),
     quests: { date: todayISO(), items: defaultQuests(), claimed: [] },
+    practice: {},
     xpBonus: 0,
     seenLevel: null,
   }

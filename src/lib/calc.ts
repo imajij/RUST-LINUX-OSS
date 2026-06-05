@@ -1,7 +1,7 @@
 // calc.ts — constants + derived calculators (XP, levels, streaks, leagues, progress).
 // Pure functions over AppState; nothing is stored.
 
-import type { AppState, TrackId, TrackNode } from '../types'
+import type { AppState, Difficulty, ProblemKind, TrackId, TrackNode } from '../types'
 import { daysUntil, todayISO, daysAgo } from './date'
 
 const DAY = 86_400_000
@@ -21,13 +21,44 @@ const XP_CHAPTER = 25
 const XP_ROADMAP = 40
 const XP_CONTRIB: Record<string, number> = { merged: 150, submitted: 60, changes: 40, rejected: 10, issue: 70 }
 
+/* ---------- practice problems ---------- */
+export const PROBLEM_XP: Record<ProblemKind, Record<Difficulty, number>> = {
+  coding: { intro: 15, easy: 25, medium: 40, hard: 60 },
+  thinking: { intro: 12, easy: 20, medium: 35, hard: 55 },
+}
+export function problemXP(kind: ProblemKind, difficulty: Difficulty): number {
+  return PROBLEM_XP[kind][difficulty]
+}
+
+// minutes credited to the activity heatmap/streak when a problem is solved
+export const PRACTICE_MINUTES: Record<ProblemKind, number> = { coding: 12, thinking: 7 }
+
 export function totalXP(s: AppState): number {
   let xp = 0
   s.study.forEach((e) => { xp += e.hours * XP_PER_HOUR })
   s.contribs.forEach((c) => { xp += XP_CONTRIB[c.status] || (c.type === 'issue' ? XP_CONTRIB.issue : 40) })
   s.reading.forEach((r) => { xp += r.done * XP_CHAPTER })
   s.roadmap.forEach((t) => t.groups.forEach((g) => g.items.forEach((it) => { if (it.status === 'done') xp += XP_ROADMAP })))
+  Object.values(s.practice || {}).forEach((p) => { if (p.status === 'solved') xp += p.xp || 0 })
   return Math.round(xp + (s.xpBonus || 0))
+}
+
+/* ---------- practice progress (derived from the sparse progress map) ---------- */
+// ids look like 'rs-ch04-c-012' (coding) / 'rs-ch04-t-005' (thinking).
+export function solvedCount(s: AppState, kind?: ProblemKind, chapter?: number): number {
+  const mark = kind === 'coding' ? '-c-' : kind === 'thinking' ? '-t-' : null
+  const prefix = chapter != null ? `rs-ch${chapter < 10 ? '0' + chapter : chapter}-` : null
+  let n = 0
+  for (const id in s.practice) {
+    if (s.practice[id].status !== 'solved') continue
+    if (mark && !id.includes(mark)) continue
+    if (prefix && !id.startsWith(prefix)) continue
+    n++
+  }
+  return n
+}
+export function totalSolved(s: AppState): number {
+  return solvedCount(s)
 }
 
 // cumulative xp needed to reach level L (L>=1)
@@ -82,6 +113,7 @@ export function weeklyXP(s: AppState): number {
   let xp = hoursThisWeek(s) * XP_PER_HOUR
   s.contribs.forEach((c) => { if (daysUntil(c.date) > -7) xp += XP_CONTRIB[c.status] || 40 })
   xp += (s.quests.items || []).filter((q) => q.done).reduce((a, q) => a + q.xp, 0)
+  Object.values(s.practice || {}).forEach((p) => { if (p.status === 'solved' && p.solvedDate && daysUntil(p.solvedDate) > -7) xp += p.xp || 0 })
   return Math.round(xp)
 }
 

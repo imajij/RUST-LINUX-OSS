@@ -3,7 +3,7 @@ import type { AppState } from '../types'
 import type { Updater } from '../lib/store'
 import {
   PHASES, PHASE_BLURB, TRACKS, activeDays, hoursThisWeek, leaderboard, leagueFor,
-  levelInfo, longestStreak, overallProgress, streak, weeklyXP,
+  levelInfo, longestStreak, overallProgress, streak, totalSolved, weeklyXP,
 } from '../lib/calc'
 import { daysUntil, fmtDate, round1 } from '../lib/date'
 import { Adrak } from '../components/Adrak'
@@ -156,6 +156,7 @@ export function Overview({ state, update, nav, openQuickAdd, completeLeaf }: {
         <StatCard label="Streak" value={stk + 'd'} sub={`longest ${longestStreak(state)}d`} icon="flame" accent="var(--cat)" />
         <StatCard label="This week" value={round1(wk) + 'h'} sub={`${state.study.length} sessions`} icon="clock" accent="var(--track-c)" />
         <StatCard label="Merged PRs" value={state.contribs.filter((c) => c.status === 'merged' && c.type === 'pr').length} sub={`${state.contribs.length} contributions`} icon="merge" accent="var(--track-rfl)" />
+        <StatCard label="Problems solved" value={totalSolved(state)} sub="coding + thinking" icon="code" accent="var(--track-rfl)" />
         <StatCard label="Active days" value={totalActive} sub="last 26 weeks" icon="overview" accent="var(--success)" />
       </div>
 
@@ -191,9 +192,9 @@ export function Overview({ state, update, nav, openQuickAdd, completeLeaf }: {
         <Card>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
             <div style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 17, color: 'var(--text)', whiteSpace: 'nowrap' }}>Today's quests</div>
-            <Badge color={questsDone === 3 ? 'var(--success)' : 'var(--muted)'} dot>{questsDone}/3</Badge>
+            <Badge color={questsDone === state.quests.items.length ? 'var(--success)' : 'var(--muted)'} dot>{questsDone}/{state.quests.items.length}</Badge>
           </div>
-          <div style={{ fontSize: 12.5, color: 'var(--muted)', marginBottom: 6 }}>Finish all three to keep Adrak happy.</div>
+          <div style={{ fontSize: 12.5, color: 'var(--muted)', marginBottom: 6 }}>Finish them all to keep Adrak happy.</div>
           {state.quests.items.map((q) => (
             <div key={q.id} style={{ display: 'flex', alignItems: 'center', gap: 11, padding: '9px 0' }}>
               <div style={{ fontSize: 19, width: 34, height: 34, borderRadius: 11, display: 'grid', placeItems: 'center', background: q.done ? 'var(--accent-soft)' : 'var(--surface-2)', filter: q.done ? 'none' : 'grayscale(0.2)' }}>{q.icon}</div>
@@ -203,7 +204,7 @@ export function Overview({ state, update, nav, openQuickAdd, completeLeaf }: {
               {q.done ? <Badge color="var(--accent-deep)" dot>+{q.xp} XP</Badge> : <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, fontWeight: 700, color: 'var(--faint)' }}>+{q.xp}</span>}
             </div>
           ))}
-          {questsDone === 3 && <div style={{ marginTop: 8, padding: '10px 12px', borderRadius: 13, background: 'var(--accent-soft)', color: 'var(--accent-deep)', fontWeight: 700, fontSize: 13, textAlign: 'center' }}>🎉 All quests done — +120 bonus XP!</div>}
+          {questsDone === state.quests.items.length && <div style={{ marginTop: 8, padding: '10px 12px', borderRadius: 13, background: 'var(--accent-soft)', color: 'var(--accent-deep)', fontWeight: 700, fontSize: 13, textAlign: 'center' }}>🎉 All quests done — +120 bonus XP!</div>}
         </Card>
 
         <Card>

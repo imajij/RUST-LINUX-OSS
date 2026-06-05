@@ -30,6 +30,12 @@ const ICON_PATHS: Record<string, string> = {
   upload: 'M12 16V4M7 9l5-5 5 5M4 20h16',
   download: 'M12 4v12M7 11l5 5 5-5M4 20h16',
   lock: 'M5 11h14v10H5zM8 11V7a4 4 0 018 0v4',
+  code: 'M16 18l6-6-6-6M8 6l-6 6 6 6',
+  bulb: 'M9 18h6M10 21h4M12 3a6 6 0 00-3.5 10.9c.6.5 1 1.3 1 2.1h5c0-.8.4-1.6 1-2.1A6 6 0 0012 3z',
+  play: 'M6 4l13 8-13 8z',
+  bookmark: 'M6 3h12a1 1 0 011 1v17l-7-4.5L5 21V4a1 1 0 011-1z',
+  filter: 'M3 4h18l-7 8v7l-4 2v-9z',
+  eye: 'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7zM12 15a3 3 0 100-6 3 3 0 000 6z',
 }
 
 interface IconProps extends Omit<SVGProps<SVGSVGElement>, 'name' | 'fill' | 'stroke'> {

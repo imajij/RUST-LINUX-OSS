@@ -6,7 +6,36 @@ export type ContribType = 'pr' | 'issue'
 export type ContribStatus = 'merged' | 'accepted' | 'submitted' | 'changes' | 'rejected' | 'draft'
 export type ReadingStatus = 'todo' | 'reading' | 'done'
 export type ThemeName = 'light' | 'dark'
-export type QuestKind = 'study' | 'read' | 'roadmap'
+export type QuestKind = 'study' | 'read' | 'roadmap' | 'practice'
+
+/* ---------- practice problems ---------- */
+export type ProblemKind = 'coding' | 'thinking'
+export type Difficulty = 'intro' | 'easy' | 'medium' | 'hard'
+
+// Static, bundled content (lazy-loaded per chapter). NOT stored in localStorage.
+export interface Problem {
+  id: string            // 'rs-ch04-c-012'  (c = coding, t = thinking)
+  chapter: number       // 1..20 — chapter of The Rust Programming Language
+  kind: ProblemKind
+  difficulty: Difficulty
+  title: string
+  prompt: string        // the task / question (multi-line allowed)
+  hints: string[]       // progressive nudges (may be empty)
+  solution: string      // reference solution (Rust code) or model answer (prose)
+  starter?: string      // coding only: starter scaffold to drop into the Playground
+  tags: string[]
+}
+
+export type ProblemStatus = 'todo' | 'attempted' | 'solved'
+
+// Per-problem user progress — the ONLY problem data persisted to localStorage.
+export interface ProblemProgress {
+  status: ProblemStatus
+  solvedDate?: string
+  xp?: number           // snapshot of XP earned when solved
+  bookmarked?: boolean
+  notes?: string
+}
 
 export interface LeafItem {
   id: string
@@ -119,6 +148,7 @@ export interface AppState {
   reading: ReadingItem[]
   goals: Goal[]
   quests: Quests
+  practice: Record<string, ProblemProgress>
   xpBonus: number
   seenLevel: number | null
 }
