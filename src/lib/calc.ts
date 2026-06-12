@@ -49,11 +49,12 @@ export function totalXP(s: AppState): number {
 }
 
 /* ---------- practice progress (derived from the sparse progress map) ---------- */
-// ids look like 'rs-ch04-c-012' (rust coding) / 'lx-ch08-t-005' (linux thinking).
+// ids look like 'rs-ch04-c-012' (rust coding) / 'lx-ch08-t-005' (linux thinking)
+// / 'ds-ch07-c-012' (DSA coding).
 export function solvedCount(s: AppState, filter: { track?: LearnTrack; kind?: ProblemKind; chapter?: number } = {}): number {
   const { track, kind, chapter } = filter
   const mark = kind === 'coding' ? '-c-' : kind === 'thinking' ? '-t-' : null
-  const tp = track === 'linux' ? 'lx-' : track === 'rust' ? 'rs-' : null
+  const tp = track === 'linux' ? 'lx-' : track === 'rust' ? 'rs-' : track === 'dsa' ? 'ds-' : null
   const NN = chapter != null ? (chapter < 10 ? '0' + chapter : '' + chapter) : null
   const startPrefix = tp && NN ? `${tp}ch${NN}-` : tp
   const chSub = !tp && NN ? `ch${NN}-` : null

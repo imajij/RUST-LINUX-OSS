@@ -38,10 +38,11 @@ export interface ProblemProgress {
 }
 
 /* ---------- learning tracks & chapter notes ---------- */
-// The two learning tracks in the Learn hub. Problem/note ids encode the track:
+// The learning tracks in the Learn hub. Problem/note ids encode the track:
 //   rust  -> 'rs-ch04-c-012' / note 'note-rs-04'
 //   linux -> 'lx-ch08-c-012' / note 'note-lx-08'
-export type LearnTrack = 'rust' | 'linux'
+//   dsa   -> 'ds-ch07-c-012'  (DSA problems written in Rust; no study notes yet)
+export type LearnTrack = 'rust' | 'linux' | 'dsa'
 
 export interface NoteCode { lang: string; src: string }            // a code snippet shown after prose
 export interface NoteSection { heading: string; body: string; code?: NoteCode[] }

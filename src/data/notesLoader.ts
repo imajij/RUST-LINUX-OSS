@@ -15,7 +15,8 @@ const pad2 = (n: number): string => (n < 10 ? '0' + n : '' + n)
 export async function loadNote(track: LearnTrack, n: number): Promise<ChapterNote | null> {
   const ck = `${track}:${n}`
   if (cache.has(ck)) return cache.get(ck)!
-  const file = `/${track === 'linux' ? 'lx' : 'rs'}-ch${pad2(n)}.ts`
+  // DSA has no study notes yet -> 'ds-chNN.ts' won't exist -> resolves to null.
+  const file = `/${track === 'linux' ? 'lx' : track === 'dsa' ? 'ds' : 'rs'}-ch${pad2(n)}.ts`
   const path = Object.keys(modules).find((p) => p.endsWith(file))
   const note = path ? (await modules[path]()).default : null
   cache.set(ck, note)

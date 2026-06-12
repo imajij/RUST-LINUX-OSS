@@ -1,7 +1,8 @@
 // problemsLoader.ts — lazily loads a chapter's bundled problems on demand.
 // Rust problems live in problems/chNN-{c1,c2,t}.ts; Linux problems in
-// problems/lxNN-{c1,c2,t}.ts. Vite code-splits each file via import.meta.glob,
-// so a chapter's content is only fetched the first time it's opened.
+// problems/lxNN-{c1,c2,t}.ts; DSA-in-Rust problems in problems/dsNN-c1.ts.
+// Vite code-splits each file via import.meta.glob, so a chapter's content is
+// only fetched the first time it's opened.
 
 import type { LearnTrack, Problem } from '../types'
 
@@ -10,7 +11,7 @@ const modules = import.meta.glob('./problems/*.ts') as Record<string, () => Prom
 
 const cache = new Map<string, Problem[]>()
 const pad2 = (n: number): string => (n < 10 ? '0' + n : '' + n)
-const prefix = (track: LearnTrack): string => (track === 'linux' ? 'lx' : 'ch')
+const prefix = (track: LearnTrack): string => (track === 'linux' ? 'lx' : track === 'dsa' ? 'ds' : 'ch')
 
 /** Load (and cache) every problem for a track's chapter, sorted by id. */
 export async function loadChapter(track: LearnTrack, n: number): Promise<Problem[]> {

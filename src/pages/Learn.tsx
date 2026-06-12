@@ -30,8 +30,8 @@ const DIFF: Record<Difficulty, { label: string; color: string }> = {
 const DIFF_ORDER: Difficulty[] = ['intro', 'easy', 'medium', 'hard']
 type StatusFilter = 'all' | 'unsolved' | 'solved' | 'saved'
 
-const trackAccent = (t: LearnTrack) => (t === 'linux' ? 'var(--track-c)' : 'var(--track-rust)')
-const noteId = (t: LearnTrack, n: number) => `note-${t === 'linux' ? 'lx' : 'rs'}-${n < 10 ? '0' + n : n}`
+const trackAccent = (t: LearnTrack) => (t === 'linux' ? 'var(--track-c)' : t === 'dsa' ? 'var(--track-dsa)' : 'var(--track-rust)')
+const noteId = (t: LearnTrack, n: number) => `note-${t === 'linux' ? 'lx' : t === 'dsa' ? 'ds' : 'rs'}-${n < 10 ? '0' + n : n}`
 
 function playgroundURL(code: string): string {
   const c = code && code.trim() ? code : 'fn main() {\n    \n}'
@@ -168,8 +168,8 @@ function ProblemCard({ p, track, progress, accent, onSolve, onReveal, onBookmark
         <button onClick={revealSolution} style={revealBtn(showSol, accent)}>
           <Icon name="eye" size={14} /> {showSol ? 'Hide solution' : 'Solution'}
         </button>
-        {p.kind === 'coding' && track === 'rust' && (
-          <a href={playgroundURL(p.starter || p.solution)} target="_blank" rel="noreferrer" style={{ ...revealBtn(false, 'var(--track-rust)'), textDecoration: 'none' }}>
+        {p.kind === 'coding' && (track === 'rust' || track === 'dsa') && (
+          <a href={playgroundURL(p.starter || p.solution)} target="_blank" rel="noreferrer" style={{ ...revealBtn(false, accent), textDecoration: 'none' }}>
             <Icon name="play" size={13} fill /> Playground
           </a>
         )}
@@ -277,7 +277,7 @@ export function Learn({ state, update, onSolve, onReadNote }: {
   const onBookmark = (id: string, v: boolean) => patch(id, { bookmarked: v })
   const onNote = (id: string, note: string) => patch(id, { notes: note })
 
-  const switchTrack = (t: LearnTrack) => { if (t === track) return; setTrack(t); setOpenCh(null); setDiff('all'); setStatusF('all') }
+  const switchTrack = (t: LearnTrack) => { if (t === track) return; setTrack(t); setOpenCh(null); setDiff('all'); setStatusF('all'); if (t === 'dsa' && mode === 'notes') setMode('coding') }
 
   // header stats
   const stats = useMemo(() => {
@@ -289,7 +289,7 @@ export function Learn({ state, update, onSolve, onReadNote }: {
     const total = chapters.reduce((acc, c) => acc + (kind === 'coding' ? c.coding : c.thinking), 0)
     const done = solvedCount(state, { track, kind })
     let xp = 0
-    const tp = track === 'linux' ? 'lx-' : 'rs-'
+    const tp = track === 'linux' ? 'lx-' : track === 'dsa' ? 'ds-' : 'rs-'
     const mk = kind === 'coding' ? '-c-' : '-t-'
     for (const id in state.practice) { const pr = state.practice[id]; if (pr.status === 'solved' && id.startsWith(tp) && id.includes(mk)) xp += pr.xp || 0 }
     return { a: { label: 'Solved', value: `${done}`, sub: `of ${total.toLocaleString()}`, icon: 'check' },
@@ -317,16 +317,16 @@ export function Learn({ state, update, onSolve, onReadNote }: {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-      <PageHeader icon="grad" title="Learn" subtitle="Theory, coding & thinking — Rust and the Linux kernel, chapter by chapter" accent={accent} />
+      <PageHeader icon="grad" title="Learn" subtitle="Theory, coding & thinking — Rust, the Linux kernel & DSA in Rust" accent={accent} />
 
       {/* track switcher */}
-      <div style={{ display: 'flex', gap: 8, background: 'var(--surface-2)', padding: 5, borderRadius: 14, border: '1px solid var(--line)', maxWidth: 320 }}>
-        {(['rust', 'linux'] as LearnTrack[]).map((t) => {
+      <div style={{ display: 'flex', gap: 8, background: 'var(--surface-2)', padding: 5, borderRadius: 14, border: '1px solid var(--line)', maxWidth: 460 }}>
+        {(['rust', 'linux', 'dsa'] as LearnTrack[]).map((t) => {
           const on = track === t
           const tc = trackAccent(t)
           return (
             <button key={t} onClick={() => switchTrack(t)} style={{ flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '9px 12px', borderRadius: 10, cursor: 'pointer', border: 'none', fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 14, background: on ? 'var(--surface)' : 'transparent', color: on ? tc : 'var(--muted)', boxShadow: on ? '0 4px 12px -8px var(--shadow)' : 'none' }}>
-              <span style={{ width: 9, height: 9, borderRadius: 999, background: tc }} /> {t === 'rust' ? 'Rust' : 'Linux'}
+              <span style={{ width: 9, height: 9, borderRadius: 999, background: tc }} /> {t === 'rust' ? 'Rust' : t === 'linux' ? 'Linux' : 'DSA'}
             </button>
           )
         })}
@@ -348,8 +348,8 @@ export function Learn({ state, update, onSolve, onReadNote }: {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12 }}>
         <StatCard label={stats.a.label} value={stats.a.value} sub={stats.a.sub} icon={stats.a.icon} accent={accent} />
         <StatCard label={stats.b.label} value={stats.b.value} sub={stats.b.sub} icon={stats.b.icon} accent="var(--cat)" />
-        <StatCard label="Chapters" value={`${chapters.length}`} sub={track === 'rust' ? 'of The Rust Book' : 'kernel topics'} icon="roadmap" accent="var(--info)" />
-        <StatCard label="Mode" value={mode === 'notes' ? 'Notes' : mode === 'coding' ? 'Coding' : 'Thinking'} sub={track === 'rust' ? 'Rust track' : 'Linux track'} icon={mode === 'notes' ? 'reading' : mode === 'coding' ? 'code' : 'bulb'} accent="var(--track-rfl)" />
+        <StatCard label={track === 'dsa' ? 'Topics' : 'Chapters'} value={`${chapters.length}`} sub={track === 'rust' ? 'of The Rust Book' : track === 'linux' ? 'kernel topics' : 'DSA topics'} icon="roadmap" accent="var(--info)" />
+        <StatCard label="Mode" value={mode === 'notes' ? 'Notes' : mode === 'coding' ? 'Coding' : 'Thinking'} sub={track === 'rust' ? 'Rust track' : track === 'linux' ? 'Linux track' : 'DSA track'} icon={mode === 'notes' ? 'reading' : mode === 'coding' ? 'code' : 'bulb'} accent="var(--track-rfl)" />
       </div>
 
       {/* accordion */}
