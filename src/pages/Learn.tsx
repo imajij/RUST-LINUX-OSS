@@ -2,7 +2,7 @@
 // (Notes / Coding / Thinking); a chapter accordion shows the matching content.
 // Notes & problems lazy-load per chapter. Replaces the old Coding/Thinking pages.
 
-import { useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import type { CSSProperties, MouseEvent } from 'react'
 import type { AppState, ChapterNote, Difficulty, LearnTrack, Problem, ProblemKind, ProblemProgress } from '../types'
 import type { Updater } from '../lib/store'
@@ -15,6 +15,10 @@ import { Badge, Card, EmptyState, PageHeader, ProgressBar, StatCard, Textarea } 
 import { Icon } from '../components/Icon'
 import { Markdown } from '../components/Markdown'
 import { chip } from '../components/shared'
+
+// Remotion + the animation engine are heavy, so load them only when a note that
+// actually has an animation is opened.
+const AnimationPlayer = lazy(() => import('../anim/AnimationPlayer'))
 
 export type SolveFn = (p: { id: string; kind: ProblemKind; difficulty: Difficulty }, e?: MouseEvent) => void
 export type ReadNoteFn = (noteId: string, e?: MouseEvent) => void
@@ -70,6 +74,11 @@ function NotesPanel({ note, read, accent, onRead }: { note: ChapterNote; read: b
           <div style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 16.5, color: 'var(--text)' }}>{s.heading}</div>
           <Markdown text={s.body} />
           {(s.code || []).map((c, k) => <CodeBlock key={k} code={c.src} />)}
+          {s.anim && (
+            <Suspense fallback={<div style={{ padding: '14px', borderRadius: 12, border: '1px solid var(--line)', background: 'var(--surface-2)', color: 'var(--muted)', fontSize: 12.5 }}>Loading animation…</div>}>
+              <AnimationPlayer id={s.anim} />
+            </Suspense>
+          )}
         </div>
       ))}
 

@@ -15,7 +15,8 @@ const pad2 = (n: number): string => (n < 10 ? '0' + n : '' + n)
 export async function loadNote(track: LearnTrack, n: number): Promise<ChapterNote | null> {
   const ck = `${track}:${n}`
   if (cache.has(ck)) return cache.get(ck)!
-  // DSA has no study notes yet -> 'ds-chNN.ts' won't exist -> resolves to null.
+  // Notes exist for all three tracks: rs-chNN (Rust), lx-chNN (Linux),
+  // ds-chNN (DSA-in-Rust). A missing file for any chapter resolves to null.
   const file = `/${track === 'linux' ? 'lx' : track === 'dsa' ? 'ds' : 'rs'}-ch${pad2(n)}.ts`
   const path = Object.keys(modules).find((p) => p.endsWith(file))
   const note = path ? (await modules[path]()).default : null
