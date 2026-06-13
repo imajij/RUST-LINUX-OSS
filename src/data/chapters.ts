@@ -3,7 +3,8 @@
 // 15-topic DSA-in-Rust curriculum. `coding` / `thinking` are the bundled
 // problem counts (used for collapsed accordion headers without loading
 // content). Rust/Linux topics target 70 / 30; DSA topics are 30 coding
-// (10 easy + 10 medium + 10 hard) with no thinking set.
+// (10 easy + 10 medium + 10 hard) plus 12 conceptual "thinking"
+// problems spanning intro to hard.
 
 import type { LearnTrack } from '../types'
 
@@ -61,21 +62,21 @@ export const LINUX_CHAPTERS: ChapterMeta[] = [
 // 10 hard). Solutions are complete, runnable Rust programs with assert-based
 // tests, so each opens in the Rust Playground.
 export const DSA_CHAPTERS: ChapterMeta[] = [
-  { num: 1, title: 'Arrays & Hashing', blurb: 'traversal, prefix sums & frequency maps', coding: 30, thinking: 0 },
-  { num: 2, title: 'Two Pointers', blurb: 'opposite ends & fast/slow scanning', coding: 30, thinking: 0 },
-  { num: 3, title: 'Sliding Window', blurb: 'fixed & dynamic windows over sequences', coding: 30, thinking: 0 },
-  { num: 4, title: 'Stack & Queue', blurb: 'LIFO/FIFO, monotonic stacks & deques', coding: 30, thinking: 0 },
-  { num: 5, title: 'Binary Search', blurb: 'on sorted arrays & on the answer', coding: 30, thinking: 0 },
-  { num: 6, title: 'Linked List', blurb: 'reversal, cycles, merging & dummy nodes', coding: 30, thinking: 0 },
-  { num: 7, title: 'Trees & BST', blurb: 'DFS/BFS, traversals & binary search trees', coding: 30, thinking: 0 },
-  { num: 8, title: 'Tries', blurb: 'prefix trees for words & autocomplete', coding: 30, thinking: 0 },
-  { num: 9, title: 'Heap / Priority Queue', blurb: 'binary heaps, top-k & scheduling', coding: 30, thinking: 0 },
-  { num: 10, title: 'Backtracking', blurb: 'subsets, permutations & constraint search', coding: 30, thinking: 0 },
-  { num: 11, title: 'Graphs', blurb: 'BFS/DFS, topological sort & union-find', coding: 30, thinking: 0 },
-  { num: 12, title: 'Dynamic Programming', blurb: 'memoization, tabulation & 1D/2D DP', coding: 30, thinking: 0 },
-  { num: 13, title: 'Greedy & Intervals', blurb: 'exchange arguments & interval scheduling', coding: 30, thinking: 0 },
-  { num: 14, title: 'Bit Manipulation', blurb: 'masks, XOR tricks & bit counting', coding: 30, thinking: 0 },
-  { num: 15, title: 'Math & Number Theory', blurb: 'gcd, primes & modular arithmetic', coding: 30, thinking: 0 },
+  { num: 1, title: 'Arrays & Hashing', blurb: 'traversal, prefix sums & frequency maps', coding: 30, thinking: 12 },
+  { num: 2, title: 'Two Pointers', blurb: 'opposite ends & fast/slow scanning', coding: 30, thinking: 12 },
+  { num: 3, title: 'Sliding Window', blurb: 'fixed & dynamic windows over sequences', coding: 30, thinking: 12 },
+  { num: 4, title: 'Stack & Queue', blurb: 'LIFO/FIFO, monotonic stacks & deques', coding: 30, thinking: 12 },
+  { num: 5, title: 'Binary Search', blurb: 'on sorted arrays & on the answer', coding: 30, thinking: 12 },
+  { num: 6, title: 'Linked List', blurb: 'reversal, cycles, merging & dummy nodes', coding: 30, thinking: 12 },
+  { num: 7, title: 'Trees & BST', blurb: 'DFS/BFS, traversals & binary search trees', coding: 30, thinking: 12 },
+  { num: 8, title: 'Tries', blurb: 'prefix trees for words & autocomplete', coding: 30, thinking: 12 },
+  { num: 9, title: 'Heap / Priority Queue', blurb: 'binary heaps, top-k & scheduling', coding: 30, thinking: 12 },
+  { num: 10, title: 'Backtracking', blurb: 'subsets, permutations & constraint search', coding: 30, thinking: 12 },
+  { num: 11, title: 'Graphs', blurb: 'BFS/DFS, topological sort & union-find', coding: 30, thinking: 12 },
+  { num: 12, title: 'Dynamic Programming', blurb: 'memoization, tabulation & 1D/2D DP', coding: 30, thinking: 12 },
+  { num: 13, title: 'Greedy & Intervals', blurb: 'exchange arguments & interval scheduling', coding: 30, thinking: 12 },
+  { num: 14, title: 'Bit Manipulation', blurb: 'masks, XOR tricks & bit counting', coding: 30, thinking: 12 },
+  { num: 15, title: 'Math & Number Theory', blurb: 'gcd, primes & modular arithmetic', coding: 30, thinking: 12 },
 ]
 
 export const CHAPTERS = RUST_CHAPTERS // back-compat alias
